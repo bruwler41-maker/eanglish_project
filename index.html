@@ -2,88 +2,175 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Solo Leveling Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest: My Favorite Book</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --sys-blue: #00ccff;
+            --sys-dark: #050a10;
+            --sys-window: rgba(0, 30, 60, 0.8);
+        }
+
         body {
-            background-color: #050505;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--sys-dark);
+            background-image: radial-gradient(circle at center, #001a33 0%, #050a10 100%);
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 50px;
-        }
-
-        /* Стиль игрового окна системы */
-        .system-window {
-            border: 2px solid #00ccff;
-            background: rgba(0, 204, 255, 0.1);
-            box-shadow: 0 0 15px #00ccff;
+            min-height: 100vh;
             padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
+            overflow-x: hidden;
         }
 
-        .system-window.visible {
-            opacity: 1;
-            transform: translateY(0);
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--sys-blue);
+            text-shadow: 0 0 20px var(--sys-blue);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-top: 40px;
+        }
+
+        .system-window {
+            background: var(--sys-window);
+            border: 2px solid var(--sys-blue);
+            box-shadow: 0 0 25px rgba(0, 204, 255, 0.3), inset 0 0 15px rgba(0, 204, 255, 0.1);
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 2px;
+            display: none; /* Скрыто по умолчанию */
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .header {
-            color: #00ccff;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-bottom: 1px solid #00ccff;
-            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            color: var(--sys-blue);
+            border-bottom: 1px solid var(--sys-blue);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .btn-accept {
-            background: #00ccff;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            font-weight: bold;
+        .content {
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+
+        /* Stats Section */
+        .stat-row { margin: 10px 0; }
+        .stat-label { font-size: 0.8em; color: var(--sys-blue); text-transform: uppercase; }
+        .stat-bar {
+            width: 100%;
+            background: #111;
+            height: 8px;
+            margin-top: 5px;
+            border: 1px solid #222;
+        }
+        .stat-fill {
+            height: 100%;
+            background: var(--sys-blue);
+            box-shadow: 0 0 10px var(--sys-blue);
+            width: 0%;
+            transition: width 1.5s ease-in-out;
+        }
+
+        .btn-system {
+            background: transparent;
+            border: 1px solid var(--sys-blue);
+            color: var(--sys-blue);
+            padding: 10px 30px;
+            font-family: 'Orbitron', sans-serif;
             cursor: pointer;
+            transition: 0.3s;
             margin-top: 20px;
+            text-transform: uppercase;
         }
 
-        .btn-accept:hover {
-            background: #fff;
-            box-shadow: 0 0 20px #fff;
+        .btn-system:hover {
+            background: var(--sys-blue);
+            color: black;
+            box-shadow: 0 0 30px var(--sys-blue);
+        }
+
+        #level-up {
+            color: #ffcc00;
+            display: none;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <h1 style="color: #00ccff;">[ QUEST: PRESENTATION ]</h1>
+    <h1>[ SYSTEM STATUS ]</h1>
 
-    <div class="system-window visible">
-        <div class="header">System Notification</div>
-        <p><b>Title:</b> My Favorite Book: Solo Leveling</p>
-        <p><b>Author:</b> Chugong</p>
-        <p><i>Click to proceed with the story...</i></p>
+    <div id="step1" class="system-window" style="display: block;">
+        <div class="header"><span>NOTIFICATION</span><span>NEW QUEST</span></div>
+        <div class="content" id="text1">My favorite book is "Solo Leveling". It's a legendary South Korean manhwa about growth and power.</div>
     </div>
 
-    <div id="plot" class="system-window">
-        <div class="header">Quest Info: The Plot</div>
-        <p>The world is filled with Dungeons and Hunters. The main hero, Sung Jin-woo, is the weakest E-rank hunter. But one day, he receives a unique power: The System.</p>
+    <div id="step2" class="system-window">
+        <div class="header"><span>QUEST INFO</span><span>THE PLOT</span></div>
+        <div class="content" id="text2">In a world of Dungeons and Hunters, Sung Jin-woo was the weakest. But he found a "System" that allowed him to level up alone.</div>
     </div>
 
-    <button class="btn-accept" onclick="showNext()">NEXT LEVEL</button>
+    <div id="step3" class="system-window">
+        <div class="header"><span>PLAYER STATS</span><span>EVOLUTION</span></div>
+        <div class="content">
+            <div class="stat-row">
+                <div class="stat-label">Strength (E-Rank to S-Rank)</div>
+                <div class="stat-bar"><div id="bar1" class="stat-fill"></div></div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">Willpower</div>
+                <div class="stat-bar"><div id="bar2" class="stat-fill"></div></div>
+            </div>
+            <p id="text3" style="margin-top:15px;">The art style is breathtaking. Every fight scene feels like a movie!</p>
+        </div>
+    </div>
+
+    <button id="nextBtn" class="btn-system" onclick="handleProgress()">Next Level</button>
+    <div id="level-up">YOU HAVE LEVELED UP! RANK S ACHIEVED.</div>
+
+    <audio id="notifSound" src="https://www.soundjay.com/buttons/beep-01a.mp3"></audio>
 
     <script>
-        let step = 0;
-        const sections = ['plot']; // Сюда добавишь id следующих блоков
+        let currentStep = 1;
+        const sound = document.getElementById('notifSound');
 
-        function showNext() {
-            if(step < sections.length) {
-                document.getElementById(sections[step]).classList.add('visible');
-                step++;
+        function handleProgress() {
+            sound.play(); // Звук при клике
+            
+            if (currentStep === 1) {
+                document.getElementById('step2').style.display = 'block';
+                currentStep = 2;
+            } else if (currentStep === 2) {
+                document.getElementById('step3').style.display = 'block';
+                // Запуск анимации полосок
+                setTimeout(() => {
+                    document.getElementById('bar1').style.width = '100%';
+                    document.getElementById('bar2').style.width = '95%';
+                }, 200);
+                document.getElementById('level-up').style.display = 'block';
+                document.getElementById('nextBtn').innerText = "Finish Quest";
+                currentStep = 3;
+            } else {
+                alert("Quest Completed! Now, go and get your A+ grade!");
             }
         }
     </script>
