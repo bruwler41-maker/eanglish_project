@@ -24,6 +24,24 @@
             min-height: 100vh;
             padding: 20px;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Боковые картинки Сон Джин-ву */
+        .side-pic {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 90vh; /* Почти во весь экран */
+            opacity: 0.4; /* Полупрозрачность, чтобы не мешать тексту */
+            z-index: 0;
+            pointer-events: none; /* Чтобы нельзя было случайно нажать на них */
+        }
+
+        .pic-left { left: -100px; }
+        .pic-right { 
+            right: -100px; 
+            transform: translateY(-50%) scaleX(-1); /* Зеркальное отражение */
         }
 
         h1 {
@@ -33,6 +51,7 @@
             text-transform: uppercase;
             letter-spacing: 5px;
             margin-top: 40px;
+            z-index: 2;
         }
 
         .system-window {
@@ -44,9 +63,10 @@
             padding: 20px;
             margin: 20px 0;
             border-radius: 2px;
-            display: none; /* Скрыто по умолчанию */
+            display: none;
             position: relative;
             animation: slideIn 0.5s ease-out;
+            z-index: 2;
         }
 
         @keyframes slideIn {
@@ -65,12 +85,8 @@
             justify-content: space-between;
         }
 
-        .content {
-            line-height: 1.6;
-            font-size: 1.1em;
-        }
+        .content { line-height: 1.6; font-size: 1.1em; }
 
-        /* Stats Section */
         .stat-row { margin: 10px 0; }
         .stat-label { font-size: 0.8em; color: var(--sys-blue); text-transform: uppercase; }
         .stat-bar {
@@ -98,6 +114,7 @@
             transition: 0.3s;
             margin-top: 20px;
             text-transform: uppercase;
+            z-index: 2;
         }
 
         .btn-system:hover {
@@ -112,24 +129,31 @@
             font-weight: bold;
             margin-top: 10px;
             text-align: center;
+            z-index: 2;
         }
+
+        /* Скрытый контент для финального окна */
+        #step3_content { display: none; }
     </style>
 </head>
 <body>
+
+    <img src="Sung_Jinwoo_Season_2_CV.webp" alt="Jinwoo Left" class="side-pic pic-left">
+    <img src="Sung_Jinwoo_Season_2_CV.webp" alt="Jinwoo Right" class="side-pic pic-right">
 
     <h1>[ SYSTEM STATUS: Rang S ]</h1>
 
     <div id="step1" class="system-window" style="display: block;">
         <div class="header"><span>NOTIFICATION</span><span>NEW QUEST</span></div>
-        <div class="content" id="text1">My favorite manga is "Solo Leveling". It's a legendary South Korean manga about growth and power.</div>
+        <div class="content">My favorite manga is "Solo Leveling". It's a legendary South Korean manga about growth and power.</div>
     </div>
 
     <div id="step2" class="system-window">
         <div class="header"><span>QUEST INFO</span><span>THE PLOT</span></div>
-        <div class="content" id="text2">In a world, where a lot of Dangerous monsters and monster Hunters, Sung Jin-woo was the weakest. But he found a "System", with with system he can level up alone. that level give him many energy and he will stronger.</div>
+        <div class="content">In a world, where a lot of Dangerous monsters and monster Hunters, Sung Jin-woo was the weakest. But he found a "System", with which he can level up alone. That power give him many energy and he will be stronger.</div>
     </div>
 
-    <div id="step3" class="system-window">
+    <div id="step3_content">
         <div class="header"><span>PLAYER STATS</span><span>EVOLUTION</span></div>
         <div class="content">
             <div class="stat-row">
@@ -140,7 +164,7 @@
                 <div class="stat-label">Willpower</div>
                 <div class="stat-bar"><div id="bar2" class="stat-fill"></div></div>
             </div>
-            <p id="text3" style="margin-top:15px;">In this manga very beautifull arts</p>
+            <p style="margin-top:15px;">In this manga very beautifull arts!</p>
         </div>
     </div>
 
@@ -154,24 +178,49 @@
         const sound = document.getElementById('notifSound');
 
         function handleProgress() {
-            sound.play(); // Звук при клике
+            try { sound.play(); } catch(e) {}
             
             if (currentStep === 1) {
                 document.getElementById('step2').style.display = 'block';
                 currentStep = 2;
             } else if (currentStep === 2) {
-                document.getElementById('step3').style.display = 'block';
-                // Запуск анимации полосок
-                setTimeout(() => {
-                    document.getElementById('bar1').style.width = '100%';
-                    document.getElementById('bar2').style.width = '95%';
-                }, 200);
                 document.getElementById('level-up').style.display = 'block';
-                document.getElementById('nextBtn').innerText = "Finish Quest";
+                document.getElementById('nextBtn').innerText = "Open Final Rank";
                 currentStep = 3;
             } else {
-                alert("Quest Complete! Thank you for attention");
+                openFinalStep();
             }
+        }
+
+        function openFinalStep() {
+            const statsHtml = document.getElementById('step3_content').innerHTML;
+            const styleHtml = document.getElementsByTagName('style')[0].outerHTML;
+            
+            const newWindow = window.open('', '_blank', 'width=900,height=700');
+            newWindow.document.write(`
+                <html>
+                <head>
+                    <title>FINAL RANK: S</title>
+                    ${styleHtml}
+                    <style>
+                        body { justify-content: center; padding: 50px; background-image: none; background-color: #050a10; }
+                        .system-window { display: block; max-width: 800px; }
+                        .side-pic { display: none; }
+                    </style>
+                </head>
+                <body>
+                    <h1>[ ACHIEVED: S-RANK ]</h1>
+                    <div class="system-window">${statsHtml}</div>
+                    <script>
+                        setTimeout(() => {
+                            document.getElementById('bar1').style.width = '100%';
+                            document.getElementById('bar2').style.width = '95%';
+                        }, 300);
+                    <\/script>
+                </body>
+                </html>
+            `);
+            newWindow.document.close();
         }
     </script>
 </body>
